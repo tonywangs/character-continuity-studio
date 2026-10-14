@@ -1,0 +1,15 @@
+{
+  "name": "character-continuity-studio",
+  "version": "1.0.0",
+  "description": "Offline branching stories with finite-state continuity checks and replayable witnesses",
+  "type": "module",
+  "bin": { "continuity": "src/cli.js" },
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "verify": "node scripts/verify.js"
+  },
+  "files": ["src", "web", "stories", "docs", "README.md", "LICENSE"],
+  "license": "MIT",
+  "devDependencies": { "playwright": "1.58.2" }
+}

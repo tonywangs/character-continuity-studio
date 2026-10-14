@@ -1,0 +1,98 @@
+$ node --test test/export.test.js test/model.test.js test/saves.test.js
+✔ deterministic exports leave the input hash unchanged and contain no external assets (79.89962ms)
+✔ output collisions include files, directories, symlinks and input paths (66.257592ms)
+✔ serialization failures and oversized output create nothing (40.748047ms)
+✔ write failures and cancellation clean only the owned output directory (37.805324ms)
+✔ hostile story text is data, including closing script/style/title delimiters (7.375339ms)
+✔ input UTF-8 and input limits are enforced before parsing (19.319866ms)
+✔ CLI exit statuses and limit parsing expose incomplete checks honestly (1071.820206ms)
+✔ a real SIGINT interrupts an in-progress CLI search without producing an output (174.226812ms)
+✔ a source changed during serialization aborts before output creation (15.593667ms)
+✔ concurrent exports have one winner and cannot remove each other’s files (49.506425ms)
+✔ named pipes are rejected without waiting for a writer (10.401989ms)
+✔ 250 seeded finite stories agree with an independent reference enumerator (434.955269ms)
+ℹ {"seeds":250,"states":1688,"transitions":2514,"findings":1158}
+✔ original story is complete, all three endings replay, all scenes reachable (33.113544ms)
+✔ cycles, converging paths, initial contradictions, dead ends, and unreachable endings (1.290019ms)
+✔ state, transition, depth, finding, time, and cancellation budgets distinguish incomplete results (47.01771ms)
+✔ a fully visited cycle at the depth boundary is exhaustive (0.812088ms)
+✔ parser rejects malformed references, invalid domains, executable fields, and complexity excesses (3.666585ms)
+✔ replay and explanations preserve stable identifiers and cap history (1.175386ms)
+✔ all structural collection ceilings are enforced (2.020379ms)
+✔ conditions and comparisons have independently asserted truth tables (0.624539ms)
+✔ versioned saves reconstruct by replay and round trip deterministically (25.106143ms)
+✔ tampered, oversized, incompatible, extra-state and invalid replay saves are rejected (12.278897ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2614.62387
+$ node scripts/installed-check.js
+{
+  "offlineInstall": true,
+  "emptyNpmCache": true,
+  "runtimeDependencies": 0,
+  "packedFiles": 18,
+  "packedBytes": 35677,
+  "checks": [
+    "installed CLI validate/check/build/replay/load",
+    "Node socket and DNS guard active",
+    "installed self-contained browser player and report",
+    "browser-to-installed-CLI save transfer"
+  ],
+  "storyStates": 526,
+  "artifacts": {
+    "player.html": 56086,
+    "report.html": 133049,
+    "report.json": 176033
+  }
+}
+$ node scripts/browser-check.js
+{
+  "browser": "145.0.7632.6",
+  "networking": "Browser contexts offline; all HTTP(S) requests aborted and counted",
+  "requests": [],
+  "pageErrors": [],
+  "checks": [
+    "played and restored ending commons",
+    "played and restored ending shelter",
+    "played and restored ending beacon",
+    "portable save transfer; atomic rejection of six invalid saves; undo/restart; keyboard traversal, activation and visible focus; narrow viewport",
+    "remembered rescue enables consent; privacy promise blocks naming without permission; both kept-promise outcomes played",
+    "blocked browser storage preserves in-memory play and portable export",
+    "corrupt stored progress is reported and left untouched on startup",
+    "shortest counterexample stepped, state changes inspected, witness save transferred into player",
+    "all 1,025 findings reachable across 52 bounded pages; direct page navigation; state/scene browsers",
+    "hostile imported text remains literal in title, prose, choices and findings with networking blocked",
+    "51,000 prose lines render with a bounded number of text elements",
+    "2,000-choice history boundary blocks further play, retains export and undo, without rendering history nodes"
+  ],
+  "domCounts": {
+    "ending_commons": 90,
+    "ending_shelter": 89,
+    "ending_beacon": 90,
+    "player": 90,
+    "counterexample": 83,
+    "reportPagesMaximum": 104,
+    "reportWithInspector": 131,
+    "multilineProse": 85,
+    "maximumHistory": 57
+  },
+  "artifactSizes1024": {
+    "player.html": 40534,
+    "report.html": 289322,
+    "report.json": 484527
+  },
+  "wallMilliseconds": 22201.83
+}
+$ node scripts/measure.js story
+{"workload":"story","node":"v24.20.0","platform":"linux","architecture":"x64","wallMilliseconds":62.07,"peakProcessRssKiB":58496,"exhaustive":true,"reasons":[],"states":526,"processed":526,"transitions":549,"findings":0,"reachedScenes":20,"artifacts":{"player.html":56086,"report.html":133049,"report.json":176033}}
+$ node scripts/measure.js counter-1024
+{"workload":"counter-1024","node":"v24.20.0","platform":"linux","architecture":"x64","wallMilliseconds":115.37,"peakProcessRssKiB":67968,"exhaustive":true,"reasons":[],"states":1024,"processed":1024,"transitions":5120,"findings":1025,"reachedScenes":1,"artifacts":{"player.html":40534,"report.html":289322,"report.json":484527}}
+$ node scripts/measure.js bounded-2048
+{"workload":"bounded-2048","node":"v24.20.0","platform":"linux","architecture":"x64","wallMilliseconds":236.18,"peakProcessRssKiB":74372,"exhaustive":false,"reasons":["state limit"],"states":2048,"processed":2048,"transitions":20495,"findings":2048,"reachedScenes":1,"artifacts":{"player.html":41314,"report.html":592418,"report.json":1112449}}
+
+Verification passed.

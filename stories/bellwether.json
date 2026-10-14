@@ -1,0 +1,800 @@
+{
+  "format": 1,
+  "id": "bellwether",
+  "title": "The Bellwether Ledger",
+  "introduction": "An original short branching story about a repair, a record, and the limits of a promise. You play Mira, the relief keeper. Ivo repairs the machinery; Sera protects the original records. Read each scene, then choose an action. Your companions remember specific events, and your commitments change what you can honestly do. There are three endings. A playthrough takes about ten minutes.",
+  "objective": "Get the harbor through the night. Decide whether the last radio charge will carry the truth, a route to shelter, or a light to steer by. A good outcome need not settle every debt.",
+  "characters": [
+    {
+      "id": "mira",
+      "name": "Mira",
+      "description": "Relief keeper. You decide what can be promised, repaired, and said aloud."
+    },
+    {
+      "id": "ivo",
+      "name": "Ivo",
+      "description": "Mechanic. Blamed for a blackout during which he opened a flood gate."
+    },
+    {
+      "id": "sera",
+      "name": "Sera",
+      "description": "Archivist. Carries the original ledger and insists that evidence has consequences."
+    }
+  ],
+  "variables": [
+    {
+      "id": "ivo_rescue",
+      "label": "Mira remembers Ivo’s rescue",
+      "type": "boolean",
+      "initial": false,
+      "kind": "memory",
+      "owner": "mira"
+    },
+    {
+      "id": "sera_ledger",
+      "label": "Sera shared the original ledger",
+      "type": "boolean",
+      "initial": false,
+      "kind": "memory",
+      "owner": "sera"
+    },
+    {
+      "id": "storm_seen",
+      "label": "Mira saw the rising water",
+      "type": "boolean",
+      "initial": false,
+      "kind": "memory",
+      "owner": "mira"
+    },
+    {
+      "id": "brass",
+      "label": "Brass coupling carried",
+      "type": "boolean",
+      "initial": false
+    },
+    {
+      "id": "valve",
+      "label": "Pump valve repaired",
+      "type": "boolean",
+      "initial": false
+    },
+    {
+      "id": "consent",
+      "label": "Ivo agreed to be named",
+      "type": "boolean",
+      "initial": false,
+      "owner": "ivo"
+    },
+    {
+      "id": "privacy",
+      "label": "Mira’s promise to Ivo",
+      "type": "enum",
+      "initial": "unmade",
+      "kind": "commitment",
+      "owner": "mira",
+      "values": [
+        "unmade",
+        "promised",
+        "kept",
+        "broken"
+      ]
+    },
+    {
+      "id": "named",
+      "label": "Ivo is named in the broadcast",
+      "type": "boolean",
+      "initial": false
+    },
+    {
+      "id": "light",
+      "label": "The harbor light is burning",
+      "type": "boolean",
+      "initial": false
+    },
+    {
+      "id": "tide",
+      "label": "Tide warning level",
+      "type": "integer",
+      "initial": 0,
+      "min": 0,
+      "max": 2
+    }
+  ],
+  "start": "arrival",
+  "scenes": [
+    {
+      "id": "arrival",
+      "title": "A light before morning",
+      "text": "The sea has taken the road to Bellwether Light. By dawn it will take the lower harbor. You are Mira, the relief keeper, holding a key still warm from the keeper who left.\n\nInside are Ivo, the mechanic blamed for last winter’s blackout, and Sera, the archivist who brought the station’s unedited ledger. The radio has enough charge for one long transmission. The pump may give the lamp another night. Neither will decide whose account of the blackout survives. That part is yours.",
+      "choices": [
+        {
+          "id": "enter",
+          "text": "Go inside and find the others.",
+          "to": "kitchen",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "kitchen",
+      "title": "What Ivo remembers",
+      "text": "Ivo has set three cups on the table though there is no tea. “When the lamp went out, I went down to open the flood gate. Two families got out. The inquiry wrote that I abandoned my post.”\n\nHe touches the empty third cup. “I’m not asking you to make me a hero. Just don’t make me a story before you ask.”",
+      "choices": [
+        {
+          "id": "listen",
+          "text": "Sit down. Let Ivo finish the story of the rescue.",
+          "to": "workshop",
+          "effects": [
+            {
+              "var": "ivo_rescue",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "hurry",
+          "text": "Say there will be time for this after the machinery.",
+          "to": "workshop",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "workshop",
+      "title": "A socket with no coupling",
+      "text": "The pump coughs once, then stops. Ivo points at a cracked brass coupling. A spare might be in the loft. Going up costs minutes, but without it the harbor light will remain dark.\n\nSera calls from the quay. She has found something in the station ledger that will not wait until morning.",
+      "choices": [
+        {
+          "id": "search_loft",
+          "text": "Climb into the loft for a spare.",
+          "to": "loft",
+          "effects": []
+        },
+        {
+          "id": "skip_loft",
+          "text": "Leave the pump and meet Sera.",
+          "to": "quay",
+          "effects": []
+        }
+      ],
+      "lines": [
+        {
+          "when": {
+            "var": "ivo_rescue",
+            "op": "eq",
+            "value": true
+          },
+          "text": "Ivo gives you the ladder without being asked. You remember that the last inquiry never asked where he went."
+        }
+      ]
+    },
+    {
+      "id": "loft",
+      "title": "The thing kept for later",
+      "text": "Above the beams is a coupling wrapped in newspaper. Someone has written GOOD on the paper in the old keeper’s hand. You put it in your coat. Below you, Ivo steadies the ladder. For a moment the building feels like a place that can still be repaired.",
+      "choices": [
+        {
+          "id": "take_coupling",
+          "text": "Take the coupling down to the quay.",
+          "to": "quay",
+          "effects": [
+            {
+              "var": "brass",
+              "value": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "quay",
+      "title": "Sera and the salt box",
+      "text": "Sera stands with a tin document box under her coat. “The public copy says the gate was closed all night. The original says it was opened by hand.”\n\n“Does it say who?” you ask.\n\n“It does. That’s why I didn’t bring it to the newspaper first.” She offers the box. “Records belong to people. So do consequences.”",
+      "choices": [
+        {
+          "id": "open_archive",
+          "text": "Take the box into the dry archive room.",
+          "to": "archive",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "archive",
+      "title": "An entry in a different hand",
+      "text": "The ledger is open to the blackout. A narrow line, added before the inquiry: I. opened the gate at 02:10; lower street cleared. Beside it the keeper has written: lamp feed diverted by my order.\n\nYou can read the entry closely enough to stand behind it, or leave the box sealed for the next keeper. Seeing an open page is not the same as accepting responsibility for what it says.",
+      "choices": [
+        {
+          "id": "read_ledger",
+          "text": "Read it with Sera. Remember what the original actually says.",
+          "to": "stairs",
+          "effects": [
+            {
+              "var": "sera_ledger",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "seal_ledger",
+          "text": "Close the box. Tonight is for the living.",
+          "to": "stairs",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "stairs",
+      "title": "Two ways upward",
+      "text": "The stairwell smells of hot wire. Above, the observation roof rattles in the wind. Below, the pump waits for your decision. The water cannot be heard from here; the stone makes a bad storm sound like any other night.",
+      "choices": [
+        {
+          "id": "check_roof",
+          "text": "Look at the harbor from the roof.",
+          "to": "roof",
+          "effects": []
+        },
+        {
+          "id": "straight_pump",
+          "text": "Go straight to the pump.",
+          "to": "pump",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "roof",
+      "title": "The vanished steps",
+      "text": "The first two quay steps are gone. The next wave takes the third. Lights are moving in the lower houses, far too slowly. You count the missing steps, then count again. This is no longer a warning borrowed from a forecast. You have seen it.",
+      "choices": [
+        {
+          "id": "remember_tide",
+          "text": "Carry the warning back down.",
+          "to": "pump",
+          "effects": [
+            {
+              "var": "storm_seen",
+              "value": true
+            },
+            {
+              "var": "tide",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pump",
+      "title": "A repair, or a boundary",
+      "text": "Ivo kneels beside the inlet. “We can fit a sound coupling. We can’t persuade a broken one.” He has stopped apologizing to the machine.\n\nYou decide whether to spend the spare and the remaining dry minutes on the pump, or isolate it so the flooded circuit cannot hurt anyone.",
+      "choices": [
+        {
+          "id": "repair",
+          "text": "Fit the spare coupling with Ivo.",
+          "to": "landing",
+          "effects": [
+            {
+              "var": "brass",
+              "value": false
+            },
+            {
+              "var": "valve",
+              "value": true
+            }
+          ],
+          "when": {
+            "var": "brass",
+            "op": "eq",
+            "value": true
+          }
+        },
+        {
+          "id": "isolate",
+          "text": "Isolate the pump and leave the lamp dark.",
+          "to": "landing",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "landing",
+      "title": "A promise with a shape",
+      "text": "On the landing, Ivo stops you. “Sera can prove what happened. But if you use my name on that radio, tomorrow I belong to everyone with an opinion.”\n\nYou can promise not to name him without his agreement. You can also refuse the promise honestly. Silence now would be easier than either; it would not tell him what to expect.",
+      "choices": [
+        {
+          "id": "promise",
+          "text": "Promise: no name without your agreement.",
+          "to": "radio",
+          "effects": [
+            {
+              "var": "privacy",
+              "value": "promised"
+            }
+          ]
+        },
+        {
+          "id": "decline_promise",
+          "text": "Say you cannot promise that. Let him know before you act.",
+          "to": "radio",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "radio",
+      "title": "One channel still clear",
+      "text": "The radio warms with a smell of dust. Sera dries the microphone on her sleeve. There is time for one conversation before you settle on a transmission.\n\nIvo watches the door. He will discuss being named with someone who first heard what happened. Otherwise you can make a precise tide warning, if you looked, or gather everyone without another conversation.",
+      "choices": [
+        {
+          "id": "ask_consent",
+          "text": "Ask Ivo whether he wants his name in the record.",
+          "to": "answer",
+          "effects": [],
+          "when": {
+            "var": "ivo_rescue",
+            "op": "eq",
+            "value": true
+          }
+        },
+        {
+          "id": "relay_warning",
+          "text": "Tell Sera exactly which harbor steps have vanished.",
+          "to": "signal",
+          "effects": [],
+          "when": {
+            "var": "storm_seen",
+            "op": "eq",
+            "value": true
+          }
+        },
+        {
+          "id": "gather",
+          "text": "Gather at the radio and choose what to do.",
+          "to": "meeting",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "answer",
+      "title": "An answer freely given",
+      "text": "“You listened before you had a use for it,” Ivo says. “Yes. Use my name. But say who ordered the diversion too. I won’t be someone else’s excuse again.”\n\nSera writes his words on the margin of a blank page, then turns it toward him. He signs. Permission has not made the night simple. It has made this part of it his.",
+      "choices": [
+        {
+          "id": "record_consent",
+          "text": "Record Ivo’s agreement and return to the microphone.",
+          "to": "meeting",
+          "effects": [
+            {
+              "var": "consent",
+              "value": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "signal",
+      "title": "A warning made specific",
+      "text": "Sera marks the vanished steps on the harbor map. “Then the school is the last dry room, not the warehouse.” She changes the evacuation instructions.\n\nA witnessed detail has moved the meeting place uphill. It is a small correction with room for forty people inside it.",
+      "choices": [
+        {
+          "id": "carry_warning",
+          "text": "Carry the corrected instructions to the radio.",
+          "to": "meeting",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "meeting",
+      "title": "What the charge will carry",
+      "text": "The three of you stand around the microphone. The charge will carry a full account, evacuation instructions, or a lamp test and sailing guidance. You cannot say everything carefully before the battery falls silent.\n\nSera asks, “What do we owe the people listening?” Ivo asks, “And what will we owe each other afterward?”",
+      "choices": [
+        {
+          "id": "choose_record",
+          "text": "Make a public account grounded in the original ledger.",
+          "to": "testimony",
+          "effects": [],
+          "when": {
+            "var": "sera_ledger",
+            "op": "eq",
+            "value": true
+          }
+        },
+        {
+          "id": "choose_shelter",
+          "text": "Use the channel to bring the lower harbor to shelter.",
+          "to": "evacuation",
+          "effects": []
+        },
+        {
+          "id": "choose_beacon",
+          "text": "Light the repaired lamp and guide the boats home.",
+          "to": "lens",
+          "effects": [],
+          "when": {
+            "var": "valve",
+            "op": "eq",
+            "value": true
+          }
+        }
+      ],
+      "lines": [
+        {
+          "when": {
+            "var": "privacy",
+            "op": "eq",
+            "value": "promised"
+          },
+          "text": "Your promise is still open. Any ending must either honor it or acknowledge its breach."
+        },
+        {
+          "when": {
+            "var": "tide",
+            "op": "eq",
+            "value": 2
+          },
+          "text": "The water you saw has already reached the third step. You tell the others before deciding."
+        }
+      ]
+    },
+    {
+      "id": "testimony",
+      "title": "A name is not the whole truth",
+      "text": "Sera puts the original beside the microphone. The order to divert the lamp will be part of the broadcast either way. The final question is whether Ivo’s name belongs in it tonight.\n\nAn unnamed account can still contradict a false inquiry. A named account can let a person answer it. Neither is a reason to pretend permission was given.",
+      "choices": [
+        {
+          "id": "publish_named_promised",
+          "text": "Name Ivo, with his agreement. Keep your promise.",
+          "to": "commons",
+          "effects": [
+            {
+              "var": "named",
+              "value": true
+            },
+            {
+              "var": "privacy",
+              "value": "kept"
+            }
+          ],
+          "when": {
+            "all": [
+              {
+                "var": "privacy",
+                "op": "eq",
+                "value": "promised"
+              },
+              {
+                "var": "consent",
+                "op": "eq",
+                "value": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "publish_unnamed_promised",
+          "text": "Read the facts without Ivo’s name. Keep your promise.",
+          "to": "commons",
+          "effects": [
+            {
+              "var": "named",
+              "value": false
+            },
+            {
+              "var": "privacy",
+              "value": "kept"
+            }
+          ],
+          "when": {
+            "var": "privacy",
+            "op": "eq",
+            "value": "promised"
+          }
+        },
+        {
+          "id": "publish_named_free",
+          "text": "Use Ivo’s name. You made no promise to withhold it.",
+          "to": "commons",
+          "effects": [
+            {
+              "var": "named",
+              "value": true
+            }
+          ],
+          "when": {
+            "var": "privacy",
+            "op": "eq",
+            "value": "unmade"
+          }
+        },
+        {
+          "id": "publish_unnamed_free",
+          "text": "Keep Ivo’s name out of the account.",
+          "to": "commons",
+          "effects": [
+            {
+              "var": "named",
+              "value": false
+            }
+          ],
+          "when": {
+            "var": "privacy",
+            "op": "eq",
+            "value": "unmade"
+          }
+        }
+      ]
+    },
+    {
+      "id": "evacuation",
+      "title": "Directions for the living",
+      "text": "You begin with a place people can reach, not with the history of the lamp. Ivo calls the house names in order. Sera crosses them out only when someone answers.\n\nThe ledger goes back into the tin box. It has survived this long; you choose to make sure there will be people to read it tomorrow.",
+      "choices": [
+        {
+          "id": "shelter_promised",
+          "text": "Give the directions. Close the night with your promise kept.",
+          "to": "shelter",
+          "effects": [
+            {
+              "var": "privacy",
+              "value": "kept"
+            }
+          ],
+          "when": {
+            "var": "privacy",
+            "op": "eq",
+            "value": "promised"
+          }
+        },
+        {
+          "id": "shelter_free",
+          "text": "Give the directions and carry the box uphill.",
+          "to": "shelter",
+          "effects": [],
+          "when": {
+            "var": "privacy",
+            "op": "eq",
+            "value": "unmade"
+          }
+        }
+      ],
+      "lines": [
+        {
+          "when": {
+            "var": "storm_seen",
+            "op": "eq",
+            "value": true
+          },
+          "text": "You name the school, above the third step. Your own warning determines the route."
+        },
+        {
+          "when": {
+            "var": "storm_seen",
+            "op": "eq",
+            "value": false
+          },
+          "text": "You choose the keeper’s house on the highest ridge. Without a recent view of the water, you leave a wider margin."
+        }
+      ]
+    },
+    {
+      "id": "lens",
+      "title": "A circle on the water",
+      "text": "The repaired pump catches. Ivo keeps a hand on the housing until the vibration settles. Sera turns the lens by hand while you send the approach bearings.\n\nA lamp can be an answer to the boats without being an answer to the inquiry. The ledger remains on the table, and tomorrow you will have to decide who opens it.",
+      "choices": [
+        {
+          "id": "beacon_promised",
+          "text": "Light the harbor. Leave Ivo’s name off the channel.",
+          "to": "beacon",
+          "effects": [
+            {
+              "var": "light",
+              "value": true
+            },
+            {
+              "var": "privacy",
+              "value": "kept"
+            }
+          ],
+          "when": {
+            "var": "privacy",
+            "op": "eq",
+            "value": "promised"
+          }
+        },
+        {
+          "id": "beacon_free",
+          "text": "Light the harbor and give the approach bearings.",
+          "to": "beacon",
+          "effects": [
+            {
+              "var": "light",
+              "value": true
+            }
+          ],
+          "when": {
+            "var": "privacy",
+            "op": "eq",
+            "value": "unmade"
+          }
+        }
+      ]
+    },
+    {
+      "id": "commons",
+      "title": "Ending · The record in common",
+      "text": "When the battery dies, someone on the other side is already repeating the account. Not perfectly. But the keeper’s order and the opened gate are in the same sentence for the first time.\n\nSera lays out three dry pages for corrections. Ivo stays at the table. You cannot control what the harbor will make of the truth. You have given it something specific enough to challenge.\n\nAt dawn, all three of you carry the ledger uphill together.",
+      "choices": [],
+      "lines": [
+        {
+          "when": {
+            "var": "named",
+            "op": "eq",
+            "value": true
+          },
+          "text": "Ivo’s name went over the water. He will have to meet it in other people’s mouths."
+        },
+        {
+          "when": {
+            "all": [
+              {
+                "var": "named",
+                "op": "eq",
+                "value": true
+              },
+              {
+                "var": "consent",
+                "op": "eq",
+                "value": false
+              }
+            ]
+          },
+          "text": "You did not break a promise, because you refused to make one. That does not mean Ivo is grateful. He carries the box by its other handle and does not look at you."
+        },
+        {
+          "when": {
+            "var": "named",
+            "op": "eq",
+            "value": false
+          },
+          "text": "The account leaves Ivo room to decide when to step into it."
+        },
+        {
+          "when": {
+            "var": "privacy",
+            "op": "eq",
+            "value": "kept"
+          },
+          "text": "You kept the promise as you spoke it. It was a boundary, not a guarantee that nothing would hurt."
+        }
+      ],
+      "ending": true
+    },
+    {
+      "id": "shelter",
+      "title": "Ending · A room above the tide",
+      "text": "The school fills with wet coats. Ivo finds a stove that draws. Sera uses blank inventory sheets to write down who has arrived. No one asks for an account of last winter tonight.\n\nThe harbor light stays dark. The original ledger rests on a classroom shelf between an atlas and a jar of chalk. You have preserved lives and a question, and neither preservation is the same as an answer.\n\nWhen the children ask who brought the tin box, you say: all three of us.",
+      "choices": [],
+      "lines": [
+        {
+          "when": {
+            "var": "privacy",
+            "op": "eq",
+            "value": "kept"
+          },
+          "text": "Ivo’s name stayed off the radio, exactly as you promised."
+        }
+      ],
+      "ending": true
+    },
+    {
+      "id": "beacon",
+      "title": "Ending · The borrowed morning",
+      "text": "Three boats answer the lamp before dawn. The last comes in with its engine stopped, pulled by the first two. Ivo watches until every rope is fast. Sera closes the ledger but leaves it on the desk.\n\nThe light has earned you a morning. It has not rewritten last winter, repaired an inquiry, or decided whose words matter. Those tasks are waiting in the dry room.\n\nYou put the key on the table where all three of you can reach it.",
+      "choices": [],
+      "lines": [
+        {
+          "when": {
+            "var": "privacy",
+            "op": "eq",
+            "value": "kept"
+          },
+          "text": "The channel carried bearings, not Ivo’s name. Your promise is kept; his account is still his to offer."
+        }
+      ],
+      "ending": true
+    }
+  ],
+  "invariants": [
+    {
+      "id": "promise_has_meaning",
+      "message": "A kept privacy promise cannot coexist with naming Ivo without his consent.",
+      "when": {
+        "var": "privacy",
+        "op": "eq",
+        "value": "kept"
+      },
+      "assert": {
+        "any": [
+          {
+            "var": "named",
+            "op": "eq",
+            "value": false
+          },
+          {
+            "var": "consent",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "light_requires_repair",
+      "message": "The harbor lamp cannot burn before the valve is repaired.",
+      "when": {
+        "var": "light",
+        "op": "eq",
+        "value": true
+      },
+      "assert": {
+        "var": "valve",
+        "op": "eq",
+        "value": true
+      }
+    },
+    {
+      "id": "record_requires_memory",
+      "message": "A public account must be grounded in the original ledger.",
+      "when": {
+        "scene": "commons"
+      },
+      "assert": {
+        "var": "sera_ledger",
+        "op": "eq",
+        "value": true
+      }
+    },
+    {
+      "id": "consent_requires_listening",
+      "message": "Ivo gives permission only after Mira listens to his account.",
+      "when": {
+        "var": "consent",
+        "op": "eq",
+        "value": true
+      },
+      "assert": {
+        "var": "ivo_rescue",
+        "op": "eq",
+        "value": true
+      }
+    },
+    {
+      "id": "no_open_promise_at_end",
+      "message": "An ending must resolve the explicit promise.",
+      "when": {
+        "any": [
+          {
+            "scene": "commons"
+          },
+          {
+            "scene": "shelter"
+          },
+          {
+            "scene": "beacon"
+          }
+        ]
+      },
+      "assert": {
+        "not": {
+          "var": "privacy",
+          "op": "eq",
+          "value": "promised"
+        }
+      }
+    }
+  ]
+}

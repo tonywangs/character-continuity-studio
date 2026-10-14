@@ -1,0 +1,7 @@
+node_modules/
+.cache/
+dist/
+*.tgz
+*.log
+!results/tests.log
+.DS_Store

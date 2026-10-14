@@ -1,0 +1,67 @@
+{
+  "measurement": "Single process per workload; wall time covers read, validate, explore, render and write. maxRSS is the Node process peak from resourceUsage, in KiB; browser RSS is not included.",
+  "workloads": [
+    {
+      "workload": "story",
+      "node": "v24.20.0",
+      "platform": "linux",
+      "architecture": "x64",
+      "wallMilliseconds": 62.07,
+      "peakProcessRssKiB": 58496,
+      "exhaustive": true,
+      "reasons": [],
+      "states": 526,
+      "processed": 526,
+      "transitions": 549,
+      "findings": 0,
+      "reachedScenes": 20,
+      "artifacts": {
+        "player.html": 56086,
+        "report.html": 133049,
+        "report.json": 176033
+      }
+    },
+    {
+      "workload": "counter-1024",
+      "node": "v24.20.0",
+      "platform": "linux",
+      "architecture": "x64",
+      "wallMilliseconds": 115.37,
+      "peakProcessRssKiB": 67968,
+      "exhaustive": true,
+      "reasons": [],
+      "states": 1024,
+      "processed": 1024,
+      "transitions": 5120,
+      "findings": 1025,
+      "reachedScenes": 1,
+      "artifacts": {
+        "player.html": 40534,
+        "report.html": 289322,
+        "report.json": 484527
+      }
+    },
+    {
+      "workload": "bounded-2048",
+      "node": "v24.20.0",
+      "platform": "linux",
+      "architecture": "x64",
+      "wallMilliseconds": 236.18,
+      "peakProcessRssKiB": 74372,
+      "exhaustive": false,
+      "reasons": [
+        "state limit"
+      ],
+      "states": 2048,
+      "processed": 2048,
+      "transitions": 20495,
+      "findings": 2048,
+      "reachedScenes": 1,
+      "artifacts": {
+        "player.html": 41314,
+        "report.html": 592418,
+        "report.json": 1112449
+      }
+    }
+  ]
+}

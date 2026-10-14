@@ -1,0 +1,122 @@
+{
+  "format": 1,
+  "id": "broken-promise",
+  "title": "A promise contradicted",
+  "introduction": "A two-choice diagnostic fixture. Accept a promise, then publish a name without permission.",
+  "objective": "Use the author report to replay the shortest contradiction.",
+  "characters": [
+    {
+      "id": "mira",
+      "name": "Mira",
+      "description": "Makes and breaks a declared commitment."
+    }
+  ],
+  "variables": [
+    {
+      "id": "promise",
+      "label": "Promise",
+      "type": "boolean",
+      "initial": false
+    },
+    {
+      "id": "named",
+      "label": "Name published",
+      "type": "boolean",
+      "initial": false
+    }
+  ],
+  "start": "start",
+  "scenes": [
+    {
+      "id": "start",
+      "title": "The promise",
+      "text": "Will you withhold the name?",
+      "choices": [
+        {
+          "id": "pledge",
+          "text": "Promise to withhold it.",
+          "to": "decision",
+          "effects": [
+            {
+              "var": "promise",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "walk",
+          "text": "Leave without a promise.",
+          "to": "safe",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "decision",
+      "title": "The publication",
+      "text": "The author forgot a guard.",
+      "choices": [
+        {
+          "id": "publish",
+          "text": "Publish it anyway.",
+          "to": "bad",
+          "effects": [
+            {
+              "var": "named",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "wait",
+          "text": "Wait in a cycle.",
+          "to": "decision",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "bad",
+      "title": "Contradiction",
+      "text": "The ending claims the promise is kept.",
+      "choices": [],
+      "ending": true
+    },
+    {
+      "id": "safe",
+      "title": "No promise",
+      "text": "No contradiction on this branch.",
+      "choices": [],
+      "ending": true
+    },
+    {
+      "id": "stranded",
+      "title": "Stranded",
+      "text": "A nonterminal scene with no choices.",
+      "choices": []
+    },
+    {
+      "id": "never",
+      "title": "Unreachable ending",
+      "text": "No incoming choice leads here.",
+      "choices": [],
+      "ending": true
+    }
+  ],
+  "invariants": [
+    {
+      "id": "withheld",
+      "message": "A promised name must not be published.",
+      "when": {
+        "var": "promise",
+        "op": "eq",
+        "value": true
+      },
+      "assert": {
+        "var": "named",
+        "op": "eq",
+        "value": false
+      }
+    }
+  ]
+}
