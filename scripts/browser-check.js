@@ -199,6 +199,54 @@ try {
     await page.locator('#undo').click();await page.waitForFunction(()=>!document.querySelector('[data-choice=again]').disabled);
     evidence.domCounts.maximumHistory=await page.locator('*').count();await c.close();evidence.checks.push('2,000-choice history boundary blocks further play, retains export and undo, without rendering history nodes');
   }
+  {
+    for (const name of ['recoverable-loop', 'progression-trap']) {
+      const built = await build(`stories/${name}.json`, join(temporary, name));
+      const c = await context(); const page = await c.newPage();
+      await page.goto(file(join(temporary, name, 'report.html')));
+      await page.locator('#report-view').selectOption('cycles');
+      const row = page.locator('#report-rows button').first(); await row.focus(); await page.keyboard.press('Enter');
+      assert.equal(await page.evaluate(() => document.activeElement.textContent), 'Replay inspector');
+      await page.locator('#replay-end').click(); assert.equal(await scene(page), 'The rehearsal');
+      await page.locator('#replay-cycle').click(); await page.locator('#replay-next').click(); assert.equal(await scene(page), 'A moment of quiet');
+      await page.locator('#replay-next').click(); assert.equal(await scene(page), 'The rehearsal');
+      const saved = await exportSave(page, '#export-witness');
+      assert.deepEqual(JSON.parse(saved).choices, ['enter', 'listen', 'again']);
+      const player = await c.newPage(); await player.goto(file(join(temporary, name, 'player.html'))); await player.waitForSelector('#scene-title'); await importSave(player, saved);
+      await click(player, 'listen'); await click(player, 'again');
+      if (name === 'recoverable-loop') { await click(player, 'perform'); assert.equal(await scene(player), 'The performance'); }
+      else { assert.equal(await scene(player), 'The rehearsal'); assert.equal(await player.locator('[data-choice=perform]').count(), 0); }
+      await page.locator('#report-view').selectOption('no-route');
+      assert.equal(await page.locator('#report-rows button').count(), name === 'progression-trap' ? 3 : 0);
+      await page.locator('#report-view').selectOption('dead-end'); assert.equal(await page.locator('#report-rows button').count(), 0);
+      evidence.domCounts[name] = await page.locator('*').count(); await narrow(page); await c.close();
+      assert.equal(built.report.progression.cycles.length, 1);
+    }
+    const many = counter(10); many.scenes[0].choices.push({ id: 'loop', text: '</script><img src="https://hostile.invalid/loop">', to: 'start', effects: [] });
+    const input = join(temporary, 'many-cycles.json'); await writeFile(input, JSON.stringify(many));
+    await build(input, join(temporary, 'many-cycles'));
+    const c = await context(); const page = await c.newPage(); await page.goto(file(join(temporary, 'many-cycles/report.html')));
+    let maxDom = 0;
+    for (const view of ['cycles', 'no-route']) {
+      await page.locator('#report-view').selectOption(view); let count = 0;
+      do {
+        count += await page.locator('#report-rows button').count(); maxDom = Math.max(maxDom, await page.locator('*').count());
+        if (await page.locator('#next-page').isDisabled()) break;
+        await page.locator('#next-page').click();
+      } while (true);
+      assert.equal(count, 1024);
+    }
+    assert.ok(maxDom < 300); evidence.domCounts.progressionPagesMaximum = maxDom;
+    await page.locator('#report-view').selectOption('cycles'); await page.locator('#report-rows button').first().click(); await page.locator('#replay-end').click();
+    assert.equal(await page.locator('img').count(), 0); assert.match(await page.locator('#inspector').textContent(), /hostile.invalid/);
+    await c.close();
+    await build('stories/recoverable-loop.json', join(temporary, 'partial-progression'), { maxStates: 1 });
+    const cc = await context(); const pp = await cc.newPage(); await pp.goto(file(join(temporary, 'partial-progression/report.html')));
+    await pp.locator('#report-view').selectOption('unresolved'); assert.equal(await pp.locator('#report-rows button').count(), 1);
+    await pp.locator('#report-rows button').click(); assert.match(await pp.locator('#inspector').textContent(), /ending unresolved/);
+    await pp.locator('#report-view').selectOption('no-route'); assert.equal(await pp.locator('#report-rows button').count(), 0); await cc.close();
+    evidence.checks.push('progression cycle keyboard activation, repeated replay, witness transfer and optional exit; trap and unresolved filters; all 1,024 cycles and no-route states paginated; hostile cycle choice remains text');
+  }
   assert.deepEqual(evidence.requests,[],'no external requests attempted');assert.deepEqual(evidence.pageErrors,[],'no browser exceptions');
   evidence.wallMilliseconds=Math.round((performance.now()-start)*100)/100;
   console.log(JSON.stringify(evidence,null,2));

@@ -9,7 +9,13 @@ const name=process.argv[2]??'story';
 try {
   let input='stories/bellwether.json';
   const options={};
-  if(name!=='story') {input=join(dir,'counter.json');await writeFile(input,JSON.stringify(counter(name==='counter-1024'?10:14)));if(name==='bounded-2048')options.maxStates=2048;}
+  if(name!=='story') {
+    input=join(dir,'counter.json');
+    const story=counter(name==='bounded-2048'?14:10);
+    if(name==='cycles-1024') story.scenes[0].choices.push({id:'loop',text:'Repeat this state',to:'start',effects:[]});
+    await writeFile(input,JSON.stringify(story));
+    if(name==='bounded-2048')options.maxStates=2048;
+  }
   const start=performance.now();const result=await build(input,join(dir,'output'),options);const wallMilliseconds=performance.now()-start;
-  console.log(JSON.stringify({workload:name,node:process.version,platform:process.platform,architecture:process.arch,wallMilliseconds:Math.round(wallMilliseconds*100)/100,peakProcessRssKiB:process.resourceUsage().maxRSS,exhaustive:result.report.exhaustive,reasons:result.report.reasons,...result.report.counts,artifacts:result.sizes}));
+  console.log(JSON.stringify({workload:name,node:process.version,platform:process.platform,architecture:process.arch,wallMilliseconds:Math.round(wallMilliseconds*100)/100,peakProcessRssKiB:process.resourceUsage().maxRSS,exhaustive:result.report.exhaustive,reasons:result.report.reasons,...result.report.counts,observedEdges:result.report.edges.length,progression:result.report.progression.counts,artifacts:result.sizes}));
 } finally {await rm(dir,{recursive:true,force:true});}

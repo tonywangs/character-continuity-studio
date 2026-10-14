@@ -2,18 +2,19 @@
   "offlineInstall": true,
   "emptyNpmCache": true,
   "runtimeDependencies": 0,
-  "packedFiles": 18,
-  "packedBytes": 35677,
+  "packedFiles": 22,
+  "packedBytes": 42286,
   "checks": [
     "installed CLI validate/check/build/replay/load",
     "Node socket and DNS guard active",
     "installed self-contained browser player and report",
-    "browser-to-installed-CLI save transfer"
+    "browser-to-installed-CLI save transfer",
+    "installed progression report and repeated cycle witness replay"
   ],
   "storyStates": 526,
   "artifacts": {
-    "player.html": 56086,
-    "report.html": 133049,
-    "report.json": 176033
+    "player.html": 58650,
+    "report.html": 194747,
+    "report.json": 277069
   }
 }

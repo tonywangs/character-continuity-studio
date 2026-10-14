@@ -1,8 +1,17 @@
 {
   "passed": true,
-  "wallMilliseconds": 33654.36,
-  "publishableFiles": 35,
-  "publishableBytes": 173462,
+  "wallMilliseconds": 52688.15,
+  "publishableFiles": 46,
+  "publishableBytes": 221431,
+  "progressionExperiment": {
+    "progressionSeeds": 250,
+    "boundedRuns": 750,
+    "cycles": 378,
+    "noRoute": 714,
+    "unresolved": 827,
+    "reference": "test/progression-reference.js",
+    "reproduce": "node --test test/progression.test.js"
+  },
   "semanticExperiment": {
     "seeds": 250,
     "states": 1688,
@@ -16,7 +25,7 @@
     "Node unit and independent reference tests",
     "isolated installed CLI with offline npm and denied Node networking",
     "Chromium with offline contexts and blocked external routes",
-    "three measured bounded build workloads",
+    "four measured bounded build workloads",
     "publication file/size limits"
   ]
 }

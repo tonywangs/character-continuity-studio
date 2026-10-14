@@ -6,8 +6,8 @@
       "node": "v24.20.0",
       "platform": "linux",
       "architecture": "x64",
-      "wallMilliseconds": 62.07,
-      "peakProcessRssKiB": 58496,
+      "wallMilliseconds": 110.88,
+      "peakProcessRssKiB": 59440,
       "exhaustive": true,
       "reasons": [],
       "states": 526,
@@ -15,10 +15,17 @@
       "transitions": 549,
       "findings": 0,
       "reachedScenes": 20,
+      "observedEdges": 549,
+      "progression": {
+        "endingReachable": 526,
+        "noRoute": 0,
+        "unresolved": 0,
+        "cyclicComponents": 0
+      },
       "artifacts": {
-        "player.html": 56086,
-        "report.html": 133049,
-        "report.json": 176033
+        "player.html": 58650,
+        "report.html": 194747,
+        "report.json": 277069
       }
     },
     {
@@ -26,8 +33,8 @@
       "node": "v24.20.0",
       "platform": "linux",
       "architecture": "x64",
-      "wallMilliseconds": 115.37,
-      "peakProcessRssKiB": 67968,
+      "wallMilliseconds": 243.43,
+      "peakProcessRssKiB": 74152,
       "exhaustive": true,
       "reasons": [],
       "states": 1024,
@@ -35,10 +42,17 @@
       "transitions": 5120,
       "findings": 1025,
       "reachedScenes": 1,
+      "observedEdges": 5120,
+      "progression": {
+        "endingReachable": 0,
+        "noRoute": 1024,
+        "unresolved": 0,
+        "cyclicComponents": 0
+      },
       "artifacts": {
-        "player.html": 40534,
-        "report.html": 289322,
-        "report.json": 484527
+        "player.html": 43098,
+        "report.html": 548155,
+        "report.json": 960024
       }
     },
     {
@@ -46,8 +60,8 @@
       "node": "v24.20.0",
       "platform": "linux",
       "architecture": "x64",
-      "wallMilliseconds": 236.18,
-      "peakProcessRssKiB": 74372,
+      "wallMilliseconds": 476.02,
+      "peakProcessRssKiB": 83368,
       "exhaustive": false,
       "reasons": [
         "state limit"
@@ -57,10 +71,44 @@
       "transitions": 20495,
       "findings": 2048,
       "reachedScenes": 1,
+      "observedEdges": 8177,
+      "progression": {
+        "endingReachable": 0,
+        "noRoute": 0,
+        "unresolved": 2048,
+        "cyclicComponents": 0
+      },
       "artifacts": {
-        "player.html": 41314,
-        "report.html": 592418,
-        "report.json": 1112449
+        "player.html": 43878,
+        "report.html": 1041568,
+        "report.json": 1927257
+      }
+    },
+    {
+      "workload": "cycles-1024",
+      "node": "v24.20.0",
+      "platform": "linux",
+      "architecture": "x64",
+      "wallMilliseconds": 262.2,
+      "peakProcessRssKiB": 73836,
+      "exhaustive": true,
+      "reasons": [],
+      "states": 1024,
+      "processed": 1024,
+      "transitions": 6144,
+      "findings": 1024,
+      "reachedScenes": 1,
+      "observedEdges": 6144,
+      "progression": {
+        "endingReachable": 0,
+        "noRoute": 1024,
+        "unresolved": 0,
+        "cyclicComponents": 1024
+      },
+      "artifacts": {
+        "player.html": 43165,
+        "report.html": 763647,
+        "report.json": 1453939
       }
     }
   ]

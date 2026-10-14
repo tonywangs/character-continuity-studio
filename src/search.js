@@ -1,3 +1,4 @@
+import { progression } from './progression.js';
 import { LIMITS } from './limits.js';
 import { stateKey } from './engine.js';
 
@@ -20,6 +21,7 @@ export async function explore(model, options = {}) {
   const nodes = [{ state: model.initial(), parent: null, choice: null, depth: 0 }];
   const visited = new Map([[stateKey(nodes[0].state), 0]]);
   const findings = [];
+  const edges = [];
   const reached = new Set([nodes[0].state.scene]);
   const reasons = new Set();
   let transitions = 0;
@@ -52,6 +54,7 @@ export async function explore(model, options = {}) {
         nodes.push({ state, parent: cursor, choice: choice.id, depth: node.depth + 1 });
         reached.add(state.scene);
       }
+      if (visited.has(key)) edges.push({ from: cursor, to: visited.get(key), choice: choice.id });
     }
     if (halted) break;
     // Yield so SIGINT/SIGTERM and API AbortControllers can be observed.
@@ -59,10 +62,22 @@ export async function explore(model, options = {}) {
   }
   const exhaustive = reasons.size === 0;
   const unreached = model.story.scenes.filter(s => !reached.has(s.id)).map(s => ({ scene: s.id, ending: Boolean(s.ending), status: exhaustive ? 'unreachable' : 'not-observed' }));
+  let analysis;
+  try {
+    let ticks = 0;
+    analysis = await progression(model, nodes, edges, exhaustive, async () => {
+      if (++ticks % 16 === 0) await new Promise(resolve => setTimeout(resolve, 0));
+      if (options.signal?.aborted) throw new Error('cancelled');
+      if (now() - startTime >= limits.maxMilliseconds) throw new Error('time limit');
+    });
+  } catch (error) {
+    if (!['cancelled', 'time limit'].includes(error.message)) throw error;
+    analysis = { format: 1, complete: false, reason: error.message, counts: null, states: [], cycles: [], everyPlayReachesEnding: 'unresolved' };
+  }
   return {
-    format: 1, exhaustive, reasons: [...reasons], limits,
+    format: 2, exhaustive, reasons: [...reasons], limits,
     counts: { states: nodes.length, processed, transitions, findings: findings.length, reachedScenes: reached.size },
-    nodes, findings, unreached,
+    nodes, edges, findings, unreached, progression: analysis,
   };
 }
 

@@ -1,0 +1,71 @@
+{
+  "format": 1,
+  "id": "recoverable-loop",
+  "title": "One more rehearsal",
+  "introduction": "A small authored progression example.",
+  "objective": "Rehearse as often as you like, then take the stage.",
+  "characters": [
+    {
+      "id": "a",
+      "name": "A",
+      "description": "A test character."
+    }
+  ],
+  "variables": [],
+  "start": "start",
+  "scenes": [
+    {
+      "id": "start",
+      "title": "The invitation",
+      "text": "The rehearsal room is open.",
+      "choices": [
+        {
+          "id": "enter",
+          "text": "Enter the rehearsal room",
+          "to": "rehearsal",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "rehearsal",
+      "title": "The rehearsal",
+      "text": "You can rehearse again or decide you are ready.",
+      "choices": [
+        {
+          "id": "listen",
+          "text": "Listen to the room",
+          "to": "listening",
+          "effects": []
+        },
+        {
+          "id": "perform",
+          "text": "Take the stage",
+          "to": "end",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "listening",
+      "title": "A moment of quiet",
+      "text": "The same room waits for you.",
+      "choices": [
+        {
+          "id": "again",
+          "text": "Rehearse again",
+          "to": "rehearsal",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "end",
+      "title": "The performance",
+      "text": "The lights come up. You begin.",
+      "ending": true,
+      "choices": []
+    }
+  ],
+  "invariants": []
+}

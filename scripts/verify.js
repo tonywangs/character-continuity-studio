@@ -23,11 +23,12 @@ async function run(args,extraEnv={}) {
 try {
   const tests=(await readdir('test')).filter(f=>f.endsWith('.test.js')).sort().map(f=>join('test',f));
   const testOutput = await run(['--test',...tests]);
+  const progressionExperiment = JSON.parse(testOutput.match(/\{"progressionSeeds":250[^\n]+\}/)[0]);
   const experiment = JSON.parse(testOutput.match(/\{"seeds":250[^\n]+\}/)[0]);
   await run(['scripts/installed-check.js'],{CONTINUITY_INSTALL_EVIDENCE:'results/installed.json'});
   await run(['scripts/browser-check.js'],{CONTINUITY_BROWSER_EVIDENCE:'results/browser.json'});
   const workloads=[];
-  for(const name of ['story','counter-1024','bounded-2048']) workloads.push(JSON.parse(await run(['scripts/measure.js',name])));
+  for(const name of ['story','counter-1024','bounded-2048','cycles-1024']) workloads.push(JSON.parse(await run(['scripts/measure.js',name])));
   await writeFile('results/measurements.json',JSON.stringify({measurement:'Single process per workload; wall time covers read, validate, explore, render and write. maxRSS is the Node process peak from resourceUsage, in KiB; browser RSS is not included.',workloads},null,2)+'\n');
   // Check publishable paths, rather than ignored browser/tool installations.
   const allowed=['src','web','stories','test','scripts','docs','results'];let bytes=0,files=0;
@@ -40,7 +41,7 @@ try {
   }
   for(const path of [...allowed,'README.md','LICENSE','package.json','package-lock.json','.gitignore'])await audit(path);
   assert.ok(bytes<=32*1024*1024);assert.ok(files<=1000);
-  const summary={passed:true,wallMilliseconds:Math.round((performance.now()-start)*100)/100,publishableFiles:files,publishableBytes:bytes,semanticExperiment:{...experiment,reference:'test/reference.js',generator:'test/fixtures.js',reproduce:'node --test test/model.test.js'},checks:['Node unit and independent reference tests','isolated installed CLI with offline npm and denied Node networking','Chromium with offline contexts and blocked external routes','three measured bounded build workloads','publication file/size limits']};
+  const summary={passed:true,wallMilliseconds:Math.round((performance.now()-start)*100)/100,publishableFiles:files,publishableBytes:bytes,progressionExperiment:{...progressionExperiment,reference:'test/progression-reference.js',reproduce:'node --test test/progression.test.js'},semanticExperiment:{...experiment,reference:'test/reference.js',generator:'test/fixtures.js',reproduce:'node --test test/model.test.js'},checks:['Node unit and independent reference tests','isolated installed CLI with offline npm and denied Node networking','Chromium with offline contexts and blocked external routes','four measured bounded build workloads','publication file/size limits']};
   await writeFile('results/verification.json',JSON.stringify(summary,null,2)+'\n');
   console.log('\nVerification passed. Evidence: results/*.json and results/tests.log');
   log.push('\nVerification passed.\n');

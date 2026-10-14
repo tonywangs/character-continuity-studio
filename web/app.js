@@ -179,11 +179,16 @@ function startReport() {
   main.append(el('p', report.exhaustive ? 'Exhaustive within the declared finite model.' : `Incomplete search: ${report.reasons.join(', ')}. Absence of a finding is not proof.`, report.exhaustive ? 'badge' : 'warning'));
   main.append(el('p', `${report.counts.states} states discovered · ${report.counts.processed} checked · ${report.counts.transitions} transitions tried · ${report.findings.length} findings · ${report.unreached.length} ${report.exhaustive ? 'unreachable' : 'unobserved'} scenes`, 'subtitle'));
   main.append(el('p', 'Findings refer to declared conditions only. They do not measure literary quality, psychological realism, or character intelligence.', 'small'));
+  const progression = report.progression;
+  main.append(el('p', progression.complete
+    ? `Progression: ${progression.counts.noRoute} states with no route to an ending · ${progression.counts.unresolved} unresolved · ${progression.counts.cyclicComponents} cyclic components. Every play reaches an ending: ${progression.everyPlayReachesEnding}.`
+    : `Progression unresolved: analysis interrupted (${progression.reason}).`, 'subtitle'));
+  main.append(el('p', 'A reachable ending does not ensure termination. A cycle permits indefinite play even with an exit. No fairness assumption is made.', 'small'));
   const grid = el('div', undefined, 'report-grid');
   const listColumn = el('section', undefined, 'card');
   const filterLabel = el('label', 'Browse report '); filterLabel.htmlFor = 'report-view';
   const filter = el('select'); filter.id = 'report-view';
-  for (const [value, label] of [['findings','Findings & unreached scenes'],['scenes','All scenes'],['states','Discovered states']]) { const o = el('option', label); o.value = value; filter.append(o); }
+  for (const [value, label] of [['findings','Findings & unreached scenes'],['scenes','All scenes'],['states','Discovered states'],['no-route','No route to an ending'],['unresolved','Unresolved progression'],['cycles','Cycles permitting indefinite play'],['dead-end','Nonterminal dead ends']]) { const o = el('option', label); o.value = value; filter.append(o); }
   listColumn.append(filterLabel, filter);
   const listStatus = el('p', '', 'small'); listStatus.id = 'list-status'; listStatus.setAttribute('aria-live', 'polite');
   const rows = el('div'); rows.id = 'report-rows';
@@ -196,12 +201,15 @@ function startReport() {
   pager.append(prev, pageLabel, pageInput, go, next); listColumn.append(listStatus, rows, pager);
   const inspector = el('section', undefined, 'card'); inspector.id = 'inspector';
   grid.append(listColumn, inspector); main.append(grid, status);
-  let view = 'findings'; let page = 0; let path = []; let position = 0; let selection = '';
+  let view = 'findings'; let page = 0; let path = []; let position = 0; let selection = ''; let cycleSelection = null;
   const sceneNodes = new Map();
   report.nodes.forEach((n, i) => { if (!sceneNodes.has(n.state.scene)) sceneNodes.set(n.state.scene, i); });
   const findingRows = [...report.findings, ...report.unreached.map(s => ({ kind: s.status, scene: s.scene, message: `${s.ending ? 'Ending' : 'Scene'} ${s.scene} was ${s.status === 'unreachable' ? 'not reachable after exhaustive exploration' : 'not observed in this incomplete search'}.` }))];
   function entries() {
     if (view === 'findings') return findingRows;
+    if (view === 'dead-end') return report.findings.filter(f => f.kind === 'dead-end');
+    if (view === 'cycles') return progression.cycles.map(c => ({ ...c, kind: 'cycle', message: `${c.nodes.length} states · ending ${c.endingReachability}. Repeat this cycle indefinitely in the model.` }));
+    if (view === 'no-route' || view === 'unresolved') return progression.states.filter(s => s.endingReachability === view).map(s => ({ ...s, kind: view, message: `${s.scene}: ${view === 'no-route' ? 'No ending can be reached from this state.' : 'An ending route has not been established; exploration was incomplete.'}` }));
     if (view === 'scenes') return model.story.scenes.map(s => ({ kind: s.ending ? 'ending' : 'scene', node: sceneNodes.get(s.id), scene: s.id, message: s.title }));
     return report.nodes;
   }
@@ -216,7 +224,7 @@ function startReport() {
     pageInput.value = String(page + 1); pageInput.max = String(pages); prev.disabled = page === 0; next.disabled = page === pages - 1;
     listStatus.textContent = `${all.length} entries · page ${page + 1} of ${pages} · at most ${LIMITS.pageSize} entries rendered`;
     rows.replaceChildren();
-    if (!all.length) rows.append(el('p', report.exhaustive ? 'No findings. Every scene was reached.' : 'No findings observed yet. This search is incomplete.'));
+    if (!all.length) rows.append(el('p', 'No entries in this view. Consult the exploration and progression completeness summaries above.'));
     all.slice(page * LIMITS.pageSize, (page + 1) * LIMITS.pageSize).forEach((row, offset) => {
       const index = page * LIMITS.pageSize + offset;
       const nodeIndex = view === 'states' ? index : row.node;
@@ -226,7 +234,7 @@ function startReport() {
           inspector.replaceChildren(el('h2', row.scene), el('p', row.message), el('p', 'There is no observed replay for this scene. Incomplete searches cannot establish unreachability.', 'small'));
           return;
         }
-        path = pathTo(nodeIndex); position = 0; selection = `${title}${row.message ? ': ' + row.message : ''}`; renderInspector(true);
+        cycleSelection = view === 'cycles' ? row : null; path = pathTo(nodeIndex).concat(cycleSelection?.cycle ?? []); position = 0; selection = `${title}${row.message ? ': ' + row.message : ''}`; renderInspector(true);
       }, 'finding');
       b.dataset.entry = String(index); b.append(el('strong', `${index + 1}. ${title}`));
       if (row.message) b.append(el('span', row.message, 'small')); rows.append(b);
@@ -235,7 +243,7 @@ function startReport() {
   function renderInspector(focus = false) {
     inspector.replaceChildren();
     const heading = el('h2', 'Replay inspector'); heading.tabIndex = -1; inspector.append(heading, el('p', selection, 'small'));
-    inspector.append(el('p', `Step ${position} of ${path.length}. Witnesses use the fewest choices; ties follow story order.`, 'small'));
+    inspector.append(el('p', `Step ${position} of ${path.length}. Entry paths use the fewest choices; ties follow story order. Cycles are valid, not necessarily shortest.`, 'small'));
     const nav = el('div', undefined, 'controls');
     const first = button('Reset replay', () => { position = 0; renderInspector(); }); first.id = 'replay-reset'; first.disabled = position === 0;
     const previous = button('Previous step', () => { position--; renderInspector(); }); previous.id = 'replay-previous'; previous.disabled = position === 0;
@@ -245,10 +253,19 @@ function startReport() {
       try { download(await encodeSave(model, data.hash, path), `${model.story.id}.witness.save.json`); message('Full witness exported. Import it in player.html to reach this outcome.'); }
       catch (e) { message(e.message, true); }
     }); exportButton.id = 'export-witness'; nav.append(first, previous, advance, end, exportButton); inspector.append(nav);
-    const state = model.replay(path.slice(0, position)).state;
+    // Inspector can examine a long graph witness without weakening portable-save limits.
+    const replayState = length => { let s = model.initial(); for (let i = 0; i < length; i++) s = model.step(s, path[i]).state; return s; };
+    const state = replayState(position);
+    const nodeIndex = report.nodes.findIndex(n => stateKey(n.state) === stateKey(state));
+    const classification = progression.states[nodeIndex];
+    inspector.append(el('p', classification ? `State ${nodeIndex} · ${classification.scene} · ending ${classification.endingReachability}` : 'Progression classification unresolved.', 'small'));
+    if (cycleSelection) {
+      inspector.append(el('p', `Cycle component ${cycleSelection.id}: ${cycleSelection.nodes.length} states. Entry takes ${cycleSelection.entryPath.length} choices; one cycle takes ${cycleSelection.cycle.length}. Returning to the identical scene and values makes repetition possible.`, 'small'));
+      const repeat = button('Replay cycle again', () => { position = cycleSelection.entryPath.length; renderInspector(); }); repeat.id = 'replay-cycle'; inspector.append(repeat);
+    }
     const info = el('details'); info.open = true; info.append(el('summary', position ? `Choice: ${path[position - 1]}` : 'Initial state'));
     if (position) {
-      const before = model.replay(path.slice(0, position - 1)).state;
+      const before = replayState(position - 1);
       const choice = model.choices(before).find(c => c.id === path[position - 1]);
       info.append(el('p', choice.reason, 'small'), el('p', `${before.scene} → ${state.scene}`, 'mono'));
       showChanges(info, model.step(before, path[position - 1]).changes);

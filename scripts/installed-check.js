@@ -29,6 +29,14 @@ try {
   const validation=await run(bin,['validate',story],{cwd:temp,env});assert.match(validation,/Valid format 1/);
   const checked=JSON.parse(await run(bin,['check',story],{cwd:temp,env}));assert.equal(checked.exhaustive,true);assert.equal(checked.findings,0);
   const built=JSON.parse(await run(bin,['build',story,join(temp,'output')],{cwd:temp,env}));assert.equal(built.states,526);
+  const loopStory=join(installed,'stories/recoverable-loop.json');
+  await run(bin,['build',loopStory,join(temp,'loop-output')],{cwd:temp,env});
+  const loopReport=JSON.parse(await readFile(join(temp,'loop-output/report.json'),'utf8'));
+  assert.equal(loopReport.format,2);assert.equal(loopReport.progression.cycles.length,1);
+  assert.equal(loopReport.progression.everyPlayReachesEnding,'false');
+  const cycle=loopReport.progression.cycles[0];
+  const loopReplay=JSON.parse(await run(bin,['replay',loopStory,...cycle.entryPath,...cycle.cycle,...cycle.cycle],{cwd:temp,env}));
+  assert.equal(loopReplay.state.scene,'rehearsal');
   const replay=JSON.parse(await run(bin,['replay',story,'enter','listen'],{cwd:temp,env}));assert.equal(replay.state.scene,'workshop');assert.equal(replay.state.values[0],true);
   process.env.PLAYWRIGHT_BROWSERS_PATH??=resolve('.cache/browsers');const {chromium}=await import('playwright');
   const browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-background-networking']});
@@ -44,7 +52,7 @@ try {
     await page.goto(pathToFileURL(join(temp,'output/report.html')).href);assert.match(await page.locator('main').textContent(),/Exhaustive/);
     assert.deepEqual(attempts,[]);assert.deepEqual(errors,[]);
   } finally { await browser.close(); }
-  const result={offlineInstall:true,emptyNpmCache:true,runtimeDependencies:0,packedFiles:packed[0].entryCount,packedBytes:packed[0].size,checks:['installed CLI validate/check/build/replay/load','Node socket and DNS guard active','installed self-contained browser player and report','browser-to-installed-CLI save transfer'],storyStates:checked.states,artifacts:built.sizes};
+  const result={offlineInstall:true,emptyNpmCache:true,runtimeDependencies:0,packedFiles:packed[0].entryCount,packedBytes:packed[0].size,checks:['installed CLI validate/check/build/replay/load','Node socket and DNS guard active','installed self-contained browser player and report','browser-to-installed-CLI save transfer','installed progression report and repeated cycle witness replay'],storyStates:checked.states,artifacts:built.sizes};
   console.log(JSON.stringify(result,null,2));
   if(process.env.CONTINUITY_INSTALL_EVIDENCE)await writeFile(process.env.CONTINUITY_INSTALL_EVIDENCE,JSON.stringify(result,null,2)+'\n');
 } finally {await rm(temp,{recursive:true,force:true});}

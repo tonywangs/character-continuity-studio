@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "wallMilliseconds": 33654.36,
+  "publishableFiles": 35,
+  "publishableBytes": 173462,
+  "semanticExperiment": {
+    "seeds": 250,
+    "states": 1688,
+    "transitions": 2514,
+    "findings": 1158,
+    "reference": "test/reference.js",
+    "generator": "test/fixtures.js",
+    "reproduce": "node --test test/model.test.js"
+  },
+  "checks": [
+    "Node unit and independent reference tests",
+    "isolated installed CLI with offline npm and denied Node networking",
+    "Chromium with offline contexts and blocked external routes",
+    "three measured bounded build workloads",
+    "publication file/size limits"
+  ]
+}

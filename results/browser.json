@@ -15,23 +15,27 @@
     "all 1,025 findings reachable across 52 bounded pages; direct page navigation; state/scene browsers",
     "hostile imported text remains literal in title, prose, choices and findings with networking blocked",
     "51,000 prose lines render with a bounded number of text elements",
-    "2,000-choice history boundary blocks further play, retains export and undo, without rendering history nodes"
+    "2,000-choice history boundary blocks further play, retains export and undo, without rendering history nodes",
+    "progression cycle keyboard activation, repeated replay, witness transfer and optional exit; trap and unresolved filters; all 1,024 cycles and no-route states paginated; hostile cycle choice remains text"
   ],
   "domCounts": {
     "ending_commons": 90,
     "ending_shelter": 89,
     "ending_beacon": 90,
     "player": 90,
-    "counterexample": 83,
-    "reportPagesMaximum": 104,
-    "reportWithInspector": 131,
-    "multilineProse": 85,
-    "maximumHistory": 57
+    "counterexample": 90,
+    "reportPagesMaximum": 110,
+    "reportWithInspector": 138,
+    "multilineProse": 92,
+    "maximumHistory": 57,
+    "recoverable-loop": 78,
+    "progression-trap": 76,
+    "progressionPagesMaximum": 110
   },
   "artifactSizes1024": {
-    "player.html": 40534,
-    "report.html": 289322,
-    "report.json": 484527
+    "player.html": 43098,
+    "report.html": 548155,
+    "report.json": 960024
   },
-  "wallMilliseconds": 22201.83
+  "wallMilliseconds": 38122.76
 }

@@ -1,53 +1,62 @@
-$ node --test test/export.test.js test/model.test.js test/saves.test.js
-✔ deterministic exports leave the input hash unchanged and contain no external assets (79.89962ms)
-✔ output collisions include files, directories, symlinks and input paths (66.257592ms)
-✔ serialization failures and oversized output create nothing (40.748047ms)
-✔ write failures and cancellation clean only the owned output directory (37.805324ms)
-✔ hostile story text is data, including closing script/style/title delimiters (7.375339ms)
-✔ input UTF-8 and input limits are enforced before parsing (19.319866ms)
-✔ CLI exit statuses and limit parsing expose incomplete checks honestly (1071.820206ms)
-✔ a real SIGINT interrupts an in-progress CLI search without producing an output (174.226812ms)
-✔ a source changed during serialization aborts before output creation (15.593667ms)
-✔ concurrent exports have one winner and cannot remove each other’s files (49.506425ms)
-✔ named pipes are rejected without waiting for a writer (10.401989ms)
-✔ 250 seeded finite stories agree with an independent reference enumerator (434.955269ms)
+$ node --test test/export.test.js test/model.test.js test/progression.test.js test/saves.test.js
+✔ deterministic exports leave the input hash unchanged and contain no external assets (110.707688ms)
+✔ output collisions include files, directories, symlinks and input paths (70.957902ms)
+✔ serialization failures and oversized output create nothing (36.123042ms)
+✔ write failures and cancellation clean only the owned output directory (45.505982ms)
+✔ hostile story text is data, including closing script/style/title delimiters (8.865795ms)
+✔ input UTF-8 and input limits are enforced before parsing (13.384598ms)
+✔ CLI exit statuses and limit parsing expose incomplete checks honestly (1323.060485ms)
+✔ a real SIGINT interrupts an in-progress CLI search without producing an output (191.134057ms)
+✔ a source changed during serialization aborts before output creation (20.58907ms)
+✔ concurrent exports have one winner and cannot remove each other’s files (58.633879ms)
+✔ named pipes are rejected without waiting for a writer (15.72415ms)
+✔ 250 seeded finite stories agree with an independent reference enumerator (513.775316ms)
 ℹ {"seeds":250,"states":1688,"transitions":2514,"findings":1158}
-✔ original story is complete, all three endings replay, all scenes reachable (33.113544ms)
-✔ cycles, converging paths, initial contradictions, dead ends, and unreachable endings (1.290019ms)
-✔ state, transition, depth, finding, time, and cancellation budgets distinguish incomplete results (47.01771ms)
-✔ a fully visited cycle at the depth boundary is exhaustive (0.812088ms)
-✔ parser rejects malformed references, invalid domains, executable fields, and complexity excesses (3.666585ms)
-✔ replay and explanations preserve stable identifiers and cap history (1.175386ms)
-✔ all structural collection ceilings are enforced (2.020379ms)
-✔ conditions and comparisons have independently asserted truth tables (0.624539ms)
-✔ versioned saves reconstruct by replay and round trip deterministically (25.106143ms)
-✔ tampered, oversized, incompatible, extra-state and invalid replay saves are rejected (12.278897ms)
-ℹ tests 22
+✔ original story is complete, all three endings replay, all scenes reachable (95.703057ms)
+✔ cycles, converging paths, initial contradictions, dead ends, and unreachable endings (1.724843ms)
+✔ state, transition, depth, finding, time, and cancellation budgets distinguish incomplete results (7.255756ms)
+✔ a fully visited cycle at the depth boundary is exhaustive (0.905846ms)
+✔ parser rejects malformed references, invalid domains, executable fields, and complexity excesses (4.540535ms)
+✔ replay and explanations preserve stable identifiers and cap history (1.541867ms)
+✔ all structural collection ceilings are enforced (2.328543ms)
+✔ conditions and comparisons have independently asserted truth tables (0.787257ms)
+✔ 250 seeded progression graphs and 750 exhausted-limit graphs agree with independent closure and replay (919.254591ms)
+ℹ {"progressionSeeds":250,"boundedRuns":750,"cycles":378,"noRoute":714,"unresolved":827}
+✔ authored recoverable loop and unavoidable trap have distinct conclusions (63.704586ms)
+✔ state-changing cycles, converging paths, multiple endings, and dead ends (1.56942ms)
+✔ incomplete exploration never promotes absent endings to no-route; observed cycles remain sound (3.301749ms)
+✔ original story progression audit preserves its declared story (67.426508ms)
+ℹ {"originalStoryProgression":{"endingReachable":526,"noRoute":0,"unresolved":0,"cyclicComponents":0},"everyPlayReachesEnding":"true"}
+✔ iterative component traversal handles a 20,000-state ring without recursion (249.926861ms)
+✔ versioned saves reconstruct by replay and round trip deterministically (38.996065ms)
+✔ tampered, oversized, incompatible, extra-state and invalid replay saves are rejected (10.782587ms)
+ℹ tests 28
 ℹ suites 0
-ℹ pass 22
+ℹ pass 28
 ℹ fail 0
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 2614.62387
+ℹ duration_ms 4616.785722
 $ node scripts/installed-check.js
 {
   "offlineInstall": true,
   "emptyNpmCache": true,
   "runtimeDependencies": 0,
-  "packedFiles": 18,
-  "packedBytes": 35677,
+  "packedFiles": 22,
+  "packedBytes": 42286,
   "checks": [
     "installed CLI validate/check/build/replay/load",
     "Node socket and DNS guard active",
     "installed self-contained browser player and report",
-    "browser-to-installed-CLI save transfer"
+    "browser-to-installed-CLI save transfer",
+    "installed progression report and repeated cycle witness replay"
   ],
   "storyStates": 526,
   "artifacts": {
-    "player.html": 56086,
-    "report.html": 133049,
-    "report.json": 176033
+    "player.html": 58650,
+    "report.html": 194747,
+    "report.json": 277069
   }
 }
 $ node scripts/browser-check.js
@@ -68,31 +77,37 @@ $ node scripts/browser-check.js
     "all 1,025 findings reachable across 52 bounded pages; direct page navigation; state/scene browsers",
     "hostile imported text remains literal in title, prose, choices and findings with networking blocked",
     "51,000 prose lines render with a bounded number of text elements",
-    "2,000-choice history boundary blocks further play, retains export and undo, without rendering history nodes"
+    "2,000-choice history boundary blocks further play, retains export and undo, without rendering history nodes",
+    "progression cycle keyboard activation, repeated replay, witness transfer and optional exit; trap and unresolved filters; all 1,024 cycles and no-route states paginated; hostile cycle choice remains text"
   ],
   "domCounts": {
     "ending_commons": 90,
     "ending_shelter": 89,
     "ending_beacon": 90,
     "player": 90,
-    "counterexample": 83,
-    "reportPagesMaximum": 104,
-    "reportWithInspector": 131,
-    "multilineProse": 85,
-    "maximumHistory": 57
+    "counterexample": 90,
+    "reportPagesMaximum": 110,
+    "reportWithInspector": 138,
+    "multilineProse": 92,
+    "maximumHistory": 57,
+    "recoverable-loop": 78,
+    "progression-trap": 76,
+    "progressionPagesMaximum": 110
   },
   "artifactSizes1024": {
-    "player.html": 40534,
-    "report.html": 289322,
-    "report.json": 484527
+    "player.html": 43098,
+    "report.html": 548155,
+    "report.json": 960024
   },
-  "wallMilliseconds": 22201.83
+  "wallMilliseconds": 38122.76
 }
 $ node scripts/measure.js story
-{"workload":"story","node":"v24.20.0","platform":"linux","architecture":"x64","wallMilliseconds":62.07,"peakProcessRssKiB":58496,"exhaustive":true,"reasons":[],"states":526,"processed":526,"transitions":549,"findings":0,"reachedScenes":20,"artifacts":{"player.html":56086,"report.html":133049,"report.json":176033}}
+{"workload":"story","node":"v24.20.0","platform":"linux","architecture":"x64","wallMilliseconds":110.88,"peakProcessRssKiB":59440,"exhaustive":true,"reasons":[],"states":526,"processed":526,"transitions":549,"findings":0,"reachedScenes":20,"observedEdges":549,"progression":{"endingReachable":526,"noRoute":0,"unresolved":0,"cyclicComponents":0},"artifacts":{"player.html":58650,"report.html":194747,"report.json":277069}}
 $ node scripts/measure.js counter-1024
-{"workload":"counter-1024","node":"v24.20.0","platform":"linux","architecture":"x64","wallMilliseconds":115.37,"peakProcessRssKiB":67968,"exhaustive":true,"reasons":[],"states":1024,"processed":1024,"transitions":5120,"findings":1025,"reachedScenes":1,"artifacts":{"player.html":40534,"report.html":289322,"report.json":484527}}
+{"workload":"counter-1024","node":"v24.20.0","platform":"linux","architecture":"x64","wallMilliseconds":243.43,"peakProcessRssKiB":74152,"exhaustive":true,"reasons":[],"states":1024,"processed":1024,"transitions":5120,"findings":1025,"reachedScenes":1,"observedEdges":5120,"progression":{"endingReachable":0,"noRoute":1024,"unresolved":0,"cyclicComponents":0},"artifacts":{"player.html":43098,"report.html":548155,"report.json":960024}}
 $ node scripts/measure.js bounded-2048
-{"workload":"bounded-2048","node":"v24.20.0","platform":"linux","architecture":"x64","wallMilliseconds":236.18,"peakProcessRssKiB":74372,"exhaustive":false,"reasons":["state limit"],"states":2048,"processed":2048,"transitions":20495,"findings":2048,"reachedScenes":1,"artifacts":{"player.html":41314,"report.html":592418,"report.json":1112449}}
+{"workload":"bounded-2048","node":"v24.20.0","platform":"linux","architecture":"x64","wallMilliseconds":476.02,"peakProcessRssKiB":83368,"exhaustive":false,"reasons":["state limit"],"states":2048,"processed":2048,"transitions":20495,"findings":2048,"reachedScenes":1,"observedEdges":8177,"progression":{"endingReachable":0,"noRoute":0,"unresolved":2048,"cyclicComponents":0},"artifacts":{"player.html":43878,"report.html":1041568,"report.json":1927257}}
+$ node scripts/measure.js cycles-1024
+{"workload":"cycles-1024","node":"v24.20.0","platform":"linux","architecture":"x64","wallMilliseconds":262.2,"peakProcessRssKiB":73836,"exhaustive":true,"reasons":[],"states":1024,"processed":1024,"transitions":6144,"findings":1024,"reachedScenes":1,"observedEdges":6144,"progression":{"endingReachable":0,"noRoute":1024,"unresolved":0,"cyclicComponents":1024},"artifacts":{"player.html":43165,"report.html":763647,"report.json":1453939}}
 
 Verification passed.

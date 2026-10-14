@@ -1,0 +1,65 @@
+{
+  "format": 1,
+  "id": "progression-trap",
+  "title": "The sealed rehearsal",
+  "introduction": "A small authored progression example.",
+  "objective": "Notice that movement is not progress toward an ending.",
+  "characters": [
+    {
+      "id": "a",
+      "name": "A",
+      "description": "A test character."
+    }
+  ],
+  "variables": [],
+  "start": "start",
+  "scenes": [
+    {
+      "id": "start",
+      "title": "The invitation",
+      "text": "The rehearsal room is open.",
+      "choices": [
+        {
+          "id": "enter",
+          "text": "Enter the rehearsal room",
+          "to": "rehearsal",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "rehearsal",
+      "title": "The rehearsal",
+      "text": "The stage door has sealed. You can rehearse or listen, but neither leads out.",
+      "choices": [
+        {
+          "id": "listen",
+          "text": "Listen to the room",
+          "to": "listening",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "listening",
+      "title": "A moment of quiet",
+      "text": "The same room waits for you.",
+      "choices": [
+        {
+          "id": "again",
+          "text": "Rehearse again",
+          "to": "rehearsal",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "end",
+      "title": "The performance",
+      "text": "The lights come up. You begin.",
+      "ending": true,
+      "choices": []
+    }
+  ],
+  "invariants": []
+}

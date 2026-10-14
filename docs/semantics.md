@@ -16,7 +16,7 @@ Each checked state is evaluated against every invariant. Failed invariants are f
 
 The report includes every retained finding, not only the first failure per invariant. Finding entries point to nodes; use their parent chain to recover a replay. A discovered node may not have been property-checked when a time, transition, finding, or cancellation limit stopped the search. `counts.processed` describes the checked prefix. A violation can therefore exist among discovered but not yet checked nodes without appearing in `findings` in an incomplete report.
 
-The checker does **not** prove eventual termination or eventual reachability of an ending from every state. An inert self-loop is not a dead end; it can be traversed forever in the mathematical model. A model with no findings may still be unpleasant, implausible, or impossible to finish from some branches. Properties are observations over declared state, not judgments of character motivation or truth.
+The progression phase separately checks ending reachability and cycles on the retained graph. See the [versioned progression contract](progression.md) for universal termination and partial-result semantics. An inert self-loop is not a dead end; it can be traversed forever in the mathematical model. A model with no findings may still be unpleasant, implausible, or impossible to finish from some branches. Properties are observations over declared state, not judgments of character motivation or truth.
 
 ## Limits
 
@@ -95,6 +95,7 @@ The browser tries local storage after actions and reports unavailable or full st
 - `validate.js`: strict, bounded declarative format and domain/reference validation.
 - `engine.js`: pure condition evaluation, explanations, transitions, and replay.
 - `search.js`: bounded graph exploration and shortest witnesses.
+- `progression.js`: reverse ending reachability, iterative SCCs, and cyclic witnesses.
 - `saves.js`: portable history checksum and validation.
 - `export.js`: bounded input read, content identity, CSP-protected HTML, create-only writes.
 - `cli.js`: commands, exit statuses, and cooperative process cancellation.

@@ -35,7 +35,7 @@ node src/cli.js replay stories/broken-promise.json pledge publish
 
 Open the broken example's `report.html`, select its invariant finding, and step through `pledge` → `publish`. The exact assignments are displayed alongside the choice conditions. **Export witness save** transfers that outcome into the player. This fixture also includes an inert cycle and unreachable scenes.
 
-`check` exits **0** for an exhaustive clean model, **2** for findings or unreachable scenes, **3** for an incomplete search, **1** for input/export errors, and **130** for cancellation. `build` exits **0 when files are successfully written**, even when they report contradictions. Always inspect `exhaustive`, `reasons`, `findings`, and `unreached` in `report.json`.
+`check` exits **0** for an exhaustive clean model, **2** for findings, unreachable scenes, progression traps, or cycles, **3** for incomplete exploration or progression analysis, **1** for input/export errors, and **130** for cancellation. `build` exits **0 when files are successfully written**, even when they report contradictions. Always inspect `exhaustive`, `reasons`, `findings`, `unreached`, and `progression` in `report.json`.
 
 ## Author a story
 
@@ -43,6 +43,7 @@ Edit JSON, validate it, then export to a new directory. Scene IDs and globally u
 
 - [Format and authoring walkthrough](docs/authoring.md)
 - [Semantics, checking algorithm, limits, and save contract](docs/semantics.md)
+- [Progression, cycles, fairness, and examples](docs/progression.md)
 - [Related work: ink and Yarn Spinner](docs/related-work.md)
 - [Verification and measured results](docs/verification.md)
 
@@ -65,7 +66,7 @@ It does not download anything. It runs semantic and failure-path tests, checks 2
 
 ## Boundaries
 
-These checks establish **only author-declared formal properties** of this finite model. They do not establish literary quality, psychological realism, factual truth, or general character intelligence. Exhaustive reachability does not prove that every possible playthrough terminates. A player can revisit cycles until the history cap.
+These checks establish **only author-declared formal properties** of this finite model. They do not establish literary quality, psychological realism, factual truth, or general character intelligence. Ending reachability alone does not prove that every possible playthrough terminates. The progression report separately checks for cycles and states with no ending route. A player can revisit cycles until the history cap.
 
 Portable saves contain a version, exact input-content hash, validated choice history, and an unkeyed checksum. Imported state is never trusted: it is reconstructed by replay. The checksum detects accidental or unrecomputed edits; it is **not authentication**. Anyone who can author a valid alternate history can recompute its checksum. Any change to story bytes, including whitespace, makes old saves incompatible. Storage on `file://` is browser-dependent; failed storage is reported, and exported files are the durable transfer mechanism.
 

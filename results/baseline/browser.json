@@ -1,0 +1,37 @@
+{
+  "browser": "145.0.7632.6",
+  "networking": "Browser contexts offline; all HTTP(S) requests aborted and counted",
+  "requests": [],
+  "pageErrors": [],
+  "checks": [
+    "played and restored ending commons",
+    "played and restored ending shelter",
+    "played and restored ending beacon",
+    "portable save transfer; atomic rejection of six invalid saves; undo/restart; keyboard traversal, activation and visible focus; narrow viewport",
+    "remembered rescue enables consent; privacy promise blocks naming without permission; both kept-promise outcomes played",
+    "blocked browser storage preserves in-memory play and portable export",
+    "corrupt stored progress is reported and left untouched on startup",
+    "shortest counterexample stepped, state changes inspected, witness save transferred into player",
+    "all 1,025 findings reachable across 52 bounded pages; direct page navigation; state/scene browsers",
+    "hostile imported text remains literal in title, prose, choices and findings with networking blocked",
+    "51,000 prose lines render with a bounded number of text elements",
+    "2,000-choice history boundary blocks further play, retains export and undo, without rendering history nodes"
+  ],
+  "domCounts": {
+    "ending_commons": 90,
+    "ending_shelter": 89,
+    "ending_beacon": 90,
+    "player": 90,
+    "counterexample": 83,
+    "reportPagesMaximum": 104,
+    "reportWithInspector": 131,
+    "multilineProse": 85,
+    "maximumHistory": 57
+  },
+  "artifactSizes1024": {
+    "player.html": 40534,
+    "report.html": 289322,
+    "report.json": 484527
+  },
+  "wallMilliseconds": 22201.83
+}

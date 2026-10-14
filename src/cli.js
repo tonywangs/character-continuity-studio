@@ -17,9 +17,10 @@ const help = `Character Continuity Studio · offline authoring tools
 Limits: --states N --transitions N --findings N --depth N --milliseconds N
 Output directories must not exist. The parent must already exist.
 check exits 0 when exhaustive and clean, 2 for findings/unreachable scenes,
-3 for incomplete search, 1 for errors, 130 for cancellation.
+3 for incomplete search or progression analysis, 1 for errors, 130 for cancellation.
 build exits 0 after a successful export, even if its report contains findings.
-Use report.json.exhaustive and findings to assess an exported report.
+Use report.json.exhaustive, findings, and progression to assess an exported report.
+Progression traps and cycles are findings for check exit status.
 `;
 const controller = new AbortController();
 let timedOut = false;
@@ -45,7 +46,7 @@ async function main(args) {
   }
   if (command === 'build') {
     const result = await build(input, output, options);
-    console.log(JSON.stringify({ output, storyHash: result.hash, exhaustive: result.report.exhaustive, reasons: result.report.reasons, ...result.report.counts, sizes: result.sizes }, null, 2));
+    console.log(JSON.stringify({ output, storyHash: result.hash, exhaustive: result.report.exhaustive, reasons: result.report.reasons, ...result.report.counts, progression: { complete: result.report.progression.complete, counts: result.report.progression.counts, everyPlayReachesEnding: result.report.progression.everyPlayReachesEnding }, sizes: result.sizes }, null, 2));
     return;
   }
   const { story, hash } = await readStory(input);
@@ -73,8 +74,8 @@ async function main(args) {
   const report = await explore(model, options);
   // Compact console result; full findings and all witnesses live in build's report.
   const sample = report.findings.slice(0, 10).map(f => ({ ...f, choices: witness(report, f.node) }));
-  console.log(JSON.stringify({ storyHash: hash, exhaustive: report.exhaustive, reasons: report.reasons, ...report.counts, unreached: report.unreached, firstFindings: sample }, null, 2));
-  process.exitCode = controller.signal.aborted ? 130 : !report.exhaustive ? 3 : report.findings.length || report.unreached.length ? 2 : 0;
+  console.log(JSON.stringify({ storyHash: hash, exhaustive: report.exhaustive, reasons: report.reasons, ...report.counts, unreached: report.unreached, firstFindings: sample, progression: { complete: report.progression.complete, reason: report.progression.reason, counts: report.progression.counts, everyPlayReachesEnding: report.progression.everyPlayReachesEnding } }, null, 2));
+  process.exitCode = controller.signal.aborted ? 130 : !report.exhaustive || !report.progression.complete ? 3 : report.findings.length || report.unreached.length || report.progression.counts.noRoute || report.progression.counts.cyclicComponents ? 2 : 0;
 }
 try { await main(process.argv.slice(2)); }
 catch (error) { console.error(`continuity: ${timedOut ? 'Operation exceeded its 60-second deadline. ' : ''}${error.message}`); process.exitCode = controller.signal.aborted ? 130 : 1; }
