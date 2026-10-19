@@ -2,8 +2,8 @@
   "offlineInstall": true,
   "emptyNpmCache": true,
   "runtimeDependencies": 0,
-  "packedFiles": 22,
-  "packedBytes": 42286,
+  "packedFiles": 33,
+  "packedBytes": 58135,
   "checks": [
     "installed CLI validate/check/build/replay/load",
     "Node socket and DNS guard active",

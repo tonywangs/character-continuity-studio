@@ -31,7 +31,7 @@ try {
   for(const name of ['story','counter-1024','bounded-2048','cycles-1024']) workloads.push(JSON.parse(await run(['scripts/measure.js',name])));
   await writeFile('results/measurements.json',JSON.stringify({measurement:'Single process per workload; wall time covers read, validate, explore, render and write. maxRSS is the Node process peak from resourceUsage, in KiB; browser RSS is not included.',workloads},null,2)+'\n');
   // Check publishable paths, rather than ignored browser/tool installations.
-  const allowed=['src','web','stories','test','scripts','docs','results'];let bytes=0,files=0;
+  const allowed=['src','web','stories','test','scripts','docs','results','characters'];let bytes=0,files=0;
   async function audit(path) {
     const info=await stat(path);
     if(info.isDirectory()) {for(const entry of await readdir(path))await audit(join(path,entry));return;}

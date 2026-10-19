@@ -1,6 +1,15 @@
 # Character Continuity Studio
 
-Write a finite branching story, check its declared continuity rules, and share a self-contained offline player. Every diagnostic has a replayable path; every choice explains its conditions. There are no runtime dependencies, network calls, imported scripts, or model inference.
+Play an authored character scene with a local CPU model and inspect its persistent conversation memory. You are Mira at Bellwether Light; Ivo is trying to keep the harbor safe without surrendering control of his own story.
+
+```sh
+npm run character:setup
+npm run character
+```
+
+Open **http://127.0.0.1:8787**. Initial setup downloads a pinned open model and CPU runtime; later play works locally. No API key or paid inference is needed. See [setup, memory, evaluation, and limitations](docs/character.md). **The character milestone is unfinished:** the smaller model's preliminary dialogue contradicted its role, and a completed paired evaluation of the default model is not yet available. Model replies are preserved without hidden repairs.
+
+The project also includes a finite branching-story authoring workbench. Its self-contained exports have no runtime dependencies, network calls, imported scripts, or model inference. Every diagnostic has a replayable path; every choice explains its conditions.
 
 The included original story, **The Bellwether Ledger**, follows Mira, Ivo, and Sera through a flooded lighthouse. Its 20 scenes lead to three endings about public truth, shelter, and repair. Listening to a remembered rescue and making a privacy commitment change which actions are possible. Start by playing; the introduction and objective are in the game.
 
@@ -24,7 +33,7 @@ npm install --offline --ignore-scripts --no-audit --no-fund --prefix /tmp/contin
 /tmp/continuity-local/node_modules/.bin/continuity --help
 ```
 
-The package has **zero runtime dependencies**. Playwright is only a development dependency for browser verification.
+The JavaScript package has **zero npm runtime dependencies**. Character play additionally requires the downloaded local inference runtime and model. Playwright is only a development dependency for browser verification.
 
 ## Find and repair a contradiction
 
@@ -72,4 +81,4 @@ Portable saves contain a version, exact input-content hash, validated choice his
 
 The author report renders at most 20 list entries and one replay step at a time. Search and output caps are enforced, and incomplete checks never label unseen scenes unreachable. See the detailed [limits and caveats](docs/semantics.md#limits).
 
-Code and original story: MIT license. No account access, private data, paid compute, or external inference is required.
+Code and original story: MIT license. The separately downloaded Qwen model is Apache-2.0. No account access, private data, paid compute, or external inference is required.

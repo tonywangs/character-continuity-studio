@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "browser": "145.0.7632.6",
+  "inference": "explicit test double; not evidence of model quality",
+  "checks": [
+    "send and render",
+    "HTML rendered as text",
+    "reload persistence",
+    "inspect notebook",
+    "JSON download",
+    "new scene and memory control",
+    "mobile width"
+  ],
+  "at": "2026-10-19T09:11:17.978Z"
+}

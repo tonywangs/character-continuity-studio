@@ -1,0 +1,11 @@
+{
+  "format": 1,
+  "started": "2026-10-19T11:16:02.620Z",
+  "dossierHash": "573e92c8a1518c0d6acd393b026ed11d2e9e2fe6c31d67a10081b8c0aef79ef0",
+  "protocolHash": "f36abb8185908a15663add3be3045a1ae4ceedfc3007e57f3fa31314d22ccc54",
+  "endpoint": "http://127.0.0.1:8091",
+  "runs": [],
+  "status": "failed",
+  "error": "Cannot archive model identity: HTTP 503",
+  "finished": "2026-10-19T11:16:02.730Z"
+}

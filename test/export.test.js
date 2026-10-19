@@ -85,11 +85,26 @@ test('CLI exit statuses and limit parsing expose incomplete checks honestly', as
 
 test('a real SIGINT interrupts an in-progress CLI search without producing an output', async t => {
   const {dir,input}=await fixture(t,counter(14));
-  const child=spawn(process.execPath,['src/cli.js','build',input,join(dir,'output')],{stdio:['ignore','pipe','pipe']});
+  // Synchronize on the search's first cooperative yield, not a wall-clock guess
+  // that can signal Node before the CLI installs its cancellation handler.
+  const preload = `
+    const original = globalThis.setTimeout; let announced = false;
+    globalThis.setTimeout = (callback, delay, ...args) => {
+      if (delay !== 0 || announced) return original(callback, delay, ...args);
+      announced = true;
+      const timer = original(callback, 30000, ...args);
+      process.once('SIGINT', () => { clearTimeout(timer); original(callback, 0, ...args); });
+      process.send('search-yield');
+      return timer;
+    };
+  `;
+  const child=spawn(process.execPath,['--import',`data:text/javascript,${encodeURIComponent(preload)}`,'src/cli.js','build',input,join(dir,'output')],{stdio:['ignore','pipe','pipe','ipc']});
+  t.after(()=>child.kill('SIGKILL'));
   let stderr='';child.stderr.on('data',b=>stderr+=b);
-  const timer=setTimeout(()=>child.kill('SIGINT'),150);
+  let signalled=false;
+  child.on('message',message=>{if(message==='search-yield'){signalled=true;child.kill('SIGINT');}});
   const result=await new Promise(resolve=>child.on('close',(code,signal)=>resolve({code,signal})));
-  clearTimeout(timer);
+  assert.equal(signalled,true);
   assert.equal(result.code,130,`signal=${result.signal}, stderr=${stderr}`);
   assert.match(stderr,/cancelled/);assert.deepEqual(await readdir(dir),['input.json']);
 });

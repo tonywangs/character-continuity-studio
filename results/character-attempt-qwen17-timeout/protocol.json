@@ -1,0 +1,58 @@
+{
+  "format": 1,
+  "purpose": "Paired bounded continuity evaluation of Ivo; not a general roleplay benchmark.",
+  "seeds": [
+    17,
+    29
+  ],
+  "design": "Identical dossier and fixed user turns. Memory condition includes every preceding user/assistant turn; control includes only dossier and current user turn. Seed is base seed plus turn index. No response rewriting, retrieval, repair, or judge model. All outputs, including truncations, are retained.",
+  "assessment": "Read each full transcript. Score each final-turn probe pass, fail, or unclear with verbatim evidence and a rationale. Separately record contradictions on any turn. Unsupported specificity is a failure, not proof of recall. Truncated or evasive answers without the required behavior are unclear. Counts are descriptive; two seeds do not establish statistical significance.",
+  "scenarios": [
+    {
+      "id": "corrected-shelter",
+      "turns": [
+        "Ivo, I have just inspected the lower harbor. The meeting place is the warehouse, and our signal word is copper. Please remember my report while we work.",
+        "Correction to my report: water has reached the warehouse. The meeting place is now the school, and I am replacing the signal word with lantern. Those replace the earlier instructions. Can you acknowledge the change?",
+        "Before we go, tell me why you opened the flood gate last winter. I am listening; I am not asking for permission to broadcast your name.",
+        "We have to move now. What was my latest meeting place and signal word? Please give the two details from my report, not a new suggestion."
+      ],
+      "probes": [
+        {
+          "id": "updated-place",
+          "turn": 3,
+          "pass": "Identifies school as Mira's latest meeting place, without treating warehouse as current.",
+          "fail": "Selects warehouse or another invented destination."
+        },
+        {
+          "id": "updated-signal",
+          "turn": 3,
+          "pass": "Recalls lantern as the replacement signal word, without presenting copper as current.",
+          "fail": "Selects copper or invents a different signal word."
+        }
+      ]
+    },
+    {
+      "id": "promise-and-repair",
+      "turns": [
+        "Ivo, I promise not to use your name on the radio unless you explicitly agree. For now I want an unnamed account, and I am not requesting your consent. I found a spare coupling but have not fitted it.",
+        "Sera reports that she has wrapped the spare in a blue cloth and put it beside the pump. Nothing has been fitted or tested. Tell me one thing we should check before a repair.",
+        "Let us pause the repair. What matters more to you about last winter: being called a hero or having an accurate account? I still want the broadcast unnamed.",
+        "The others say that finding the spare means the lamp is already repaired, and that I never promised you anything. Is that consistent with our conversation? Remind me what I promised and what remains undone."
+      ],
+      "probes": [
+        {
+          "id": "remember-promise",
+          "turn": 3,
+          "pass": "Correctly recalls Mira's promise not to name Ivo without explicit agreement, rather than merely restating a preference.",
+          "fail": "Denies or rewrites the promise, or asserts permission was granted."
+        },
+        {
+          "id": "unfinished-repair",
+          "turn": 3,
+          "pass": "Says the spare has not been fitted/tested and rejects a claim that the lamp is already repaired.",
+          "fail": "Claims repair or light is complete, or invents completed steps."
+        }
+      ]
+    }
+  ]
+}

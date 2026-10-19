@@ -1,0 +1,44 @@
+{
+  "assessmentMethod": "Manual reading of both completed replies against the archived dossier and user reports. This is an incomplete prerequisite, not a paired evaluation.",
+  "completedTurns": 2,
+  "availableParallelism": 1,
+  "observations": [
+    {
+      "turn": 0,
+      "evidence": "The warehouse is the meeting place, and the signal word is copper.",
+      "judgment": "Accurately acknowledges the current user report; no delayed recall tested."
+    },
+    {
+      "turn": 1,
+      "evidence": "the meeting place is now the school",
+      "judgment": "Accurately acknowledges the corrected meeting place."
+    },
+    {
+      "turn": 1,
+      "evidence": "I'll replace the signal word with lantern.",
+      "judgment": "Accurately acknowledges the corrected signal word."
+    }
+  ],
+  "contradictions": [],
+  "limitations": [
+    "No clear contradiction observed in the two completed acknowledgments; this is not evidence of reliable characterization.",
+    "Turn index 2 timed out after the configured 900000 ms; no completed response was returned or scored.",
+    "The final recall probe and all no-memory control runs remain unrun.",
+    "No real-model browser and persistence check completed."
+  ],
+  "timings": [
+    {
+      "turn": 0,
+      "elapsedMs": 648138,
+      "completionTokens": 44,
+      "generatedTokensPerSecond": 0.09890178128042193
+    },
+    {
+      "turn": 1,
+      "elapsedMs": 598384,
+      "completionTokens": 38,
+      "generatedTokensPerSecond": 0.09700208629203351
+    }
+  ],
+  "conclusion": "Blocked on sufficient CPU throughput for the unchanged protocol. No memory-benefit claim."
+}

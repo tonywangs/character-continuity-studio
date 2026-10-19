@@ -1,0 +1,27 @@
+{
+  "assessmentMethod": "Manual reading of all four completed responses; not a paired result. Turn indices are zero-based.",
+  "completedTurns": 4,
+  "identityFailure": {
+    "turns": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "evidence": "Mira:",
+    "reason": "Every generated reply uses Mira as its speaking label, although the assistant character is Ivo."
+  },
+  "contradictions": [
+    {
+      "turn": 2,
+      "evidence": "Now that we've fixed the pump",
+      "reason": "No prompt or earlier response establishes a completed repair; the dossier starts with a cracked coupling."
+    }
+  ],
+  "recallObservation": {
+    "turn": 3,
+    "evidence": "The meeting place is the school, and the signal word is now lantern.",
+    "reason": "Correctly recalls both updated details, but this does not remedy identity drift or invented actions."
+  },
+  "decision": "Reject 0.6B as default for this scene and test the official 1.7B model. Preserve this failed preliminary conversation; do not infer a memory-control effect from it."
+}

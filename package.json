@@ -1,15 +1,35 @@
 {
   "name": "character-continuity-studio",
   "version": "1.0.0",
-  "description": "Offline branching stories with finite-state continuity checks and replayable witnesses",
+  "description": "Local AI character scenes with inspectable memory, plus finite branching-story continuity checks",
   "type": "module",
-  "bin": { "continuity": "src/cli.js" },
-  "engines": { "node": ">=22" },
+  "bin": {
+    "continuity": "src/cli.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "test": "node --test test/*.test.js",
-    "verify": "node scripts/verify.js"
+    "verify": "node scripts/verify.js",
+    "character:setup": "node scripts/setup-character.js",
+    "character": "node scripts/play-character.js",
+    "character:evaluate": "node scripts/evaluate-character.js"
   },
-  "files": ["src", "web", "stories", "docs", "README.md", "LICENSE"],
+  "files": [
+    "src",
+    "web",
+    "stories",
+    "docs",
+    "README.md",
+    "LICENSE",
+    "characters",
+    "scripts/setup-character.js",
+    "scripts/play-character.js",
+    "scripts/evaluate-character.js"
+  ],
   "license": "MIT",
-  "devDependencies": { "playwright": "1.58.2" }
+  "devDependencies": {
+    "playwright": "1.58.2"
+  }
 }

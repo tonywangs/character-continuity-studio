@@ -1,8 +1,8 @@
 {
   "passed": true,
-  "wallMilliseconds": 52688.15,
-  "publishableFiles": 46,
-  "publishableBytes": 221431,
+  "wallMilliseconds": 83356.78,
+  "publishableFiles": 78,
+  "publishableBytes": 375965,
   "progressionExperiment": {
     "progressionSeeds": 250,
     "boundedRuns": 750,
